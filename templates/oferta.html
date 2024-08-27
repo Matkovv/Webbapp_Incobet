@@ -4,13 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <title>Oferta</title>
+    <title>Oferta Handlowa</title>
 </head>
 
 <body>
     <header>
         <div class="logo">
-            <!-- Link do strony głównej -->
             <a href="{{ url_for('home') }}">
                 <img src="{{ url_for('static', filename='incobet_logo.png') }}" alt="Incobet">
             </a>
@@ -27,8 +26,27 @@
     </header>
 
     <main>
-        <h1>Oferta</h1>
-        <p>Tu tekst dotyczący oferty...</p>
+        <div id="ohandlowa">
+            <h3>Oferta Handlowa</h3>
+        </div>
+        <div id="oferta">
+            <h4>
+                Nasza spółka specjalizuje się w produkcji mieszanek betonowych dla klientów realizujących inwestycje we wszystkich sektorach
+                budownictwa. Wykorzystujemy do niej wyłącznie najwyższej jakości składniki, posiadające odpowiednie atesty i certyfikaty.
+            </h4>
+            <h4>
+                Od bieżącego roku dostawy wykonujemy w dwóch wariantach:<br>
+                <br>
+                <span class="bold-text">Standardowo</span> - usługi świadczymy na terenie Warszawy i okolic, z naszej bazy
+                zlokalizowanej przy ulicy Żołnierskiej w Rembertowie.<br>
+                <span class="bold-text">Opcjonalnie</span> - jako nowość proponujemy organizację i uruchomienie produkcji w
+                dowolnym miejscu (bezpośrednio na placu budowy lub w jej sąsiedztwie), w oparciu o szybko przestawną i wydajną (80m³/godz.)
+                betonownię Cobra C 80.
+            </h4>
+            <h4>
+                Przeprowadzone analizy wskazują na opłacalność tego rozwiązania już dla inwestycji wymagających 25.000 m³ betonu.
+            </h4>
+        </div>
     </main>
 
     <footer>

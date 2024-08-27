@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikacja Testowa</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Aplikacja Testowa</h1>
+
+    {% if beton_description %}
+        <h2>Opis betonu: {{ beton_description }}</h2>
+    {% endif %}
+
+    <form method="POST">
+        <label for="ilosc_betonu">Ilość (m³):</label>
+        <input type="number" id="ilosc_betonu" name="ilosc_betonu" required><br><br>
+
+        <button type="submit">Oblicz</button>
+    </form>
+
+    {% if transport_info %}
+        <hr>
+        <h2>Wyniki Obliczeń</h2>
+        <p><strong>Rodzaj betonu:</strong> {{ transport_info.rodzaj_betonu }}</p>
+        <p><strong>Transport:</strong> {{ transport_info.transport_needed }}</p>
+        <p><strong>Czas dostawy:</strong> {{ transport_info.czas_dostawy }}</p>
+    {% endif %}
+
+    <footer>
+        <button onclick="window.close()">Zamknij</button> <!-- Przycisk do zamknięcia okna -->
+    </footer>
+</body>
+</html>

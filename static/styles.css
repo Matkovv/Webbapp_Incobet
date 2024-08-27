@@ -1,21 +1,29 @@
-body {
-    background-color: white;
-    font-family: Tahoma;
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: white;
+    font-family: Tahoma, sans-serif; /* Zmiana fontu na Tahoma */
 }
 
 h3 {
     font-size: 26px;
     font-weight: bold;
-    color:
+    color: #333;
+    text-align: center; /* Wyśrodkowane nagłówki */
+    margin-top: 20px; /* Margines od góry */
 }
 
 h4 {
     font-size: 18px;
-    font:
-    color:
+    font-weight: normal;
+    color: #666;
+    margin: 20px; /* Margines dla akapitów */
 }
+
 .button {
     background-color: blue;
     border: none;
@@ -24,7 +32,7 @@ h4 {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    fontsize: 16px;
+    font-size: 16px;
 }
 
 header {
@@ -35,64 +43,66 @@ header {
     padding: 15px;
 }
 
-main {
+.navbar {
     display: flex;
-    margin: 20px;
-    padding: 20px;
-}
-
-.logo img {
-    max-width: 300px; /* Zmień w zależności od rozmiaru logo */
 }
 
 .navbar ul {
-    list-style-type: none;
+    list-style-type: none; /* Wyłączenie wypunktowania */
     margin: 0;
     padding: 0;
     display: flex;
 }
 
 .navbar ul li {
-    margin-left: 20px;
+    margin-left: 20px; /* Odstęp między przyciskami */
 }
 
 .navbar ul li a {
-    text-decoration: none;
+    text-decoration: none; /* Wyłączenie dekoracji */
     color: #333;
-    padding: 10px;
-    transition: background-color 0.3s;
+    padding: 10px; /* Padding wewnętrzny dla linków */
+    transition: background-color 0.3s; /* Płynne przejście dla hover */
 }
 
 .navbar ul li a:hover {
-    background-color: #ddd;
+    background-color: #ddd; /* Kolor tła podczas najechania */
 }
 
-.text-area {
-    text-align: center;
-    margin: 40px 0;
+main {
+    display: flex;
+    flex-direction: column; /* Pionowy układ */
+    align-items: center; /* Wyrównanie w poziomie */
+    padding: 50px; /* Padding od środka */
+    min-height: calc(80vh - 130px); /* H wysokość pozostawiając miejsce na header i footer */
 }
 
-.text-area textarea {
-    width: 60%;
-    height: 150px;
-    padding: 10px;
-    font-size: 16px;
+#oferta {
+    width: 80%; /* Szerokość kontenera */
+}
+
+#ohandlowa {
+    margin-bottom: 20px; /* Margines dla nagłówka oferty */
+}
+
+.bold-text {
+    font-weight: bold; /* Pogrubiony tekst */
+    display: inline; /* Umożliwia wyświetlenie w tym samym wierszu */
 }
 
 footer {
-    background-color: #white;
+    background-color: white;
     padding: 15px;
     text-align: center;
-
 }
 
 .partners {
     display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
+    justify-content: center; /* Wyśrodkowanie logo partnerów */
+    flex-wrap: wrap; /* Umożliwia przenoszenie obrazów */
 }
 
 .partners img {
-    margin: 10px;
-    max-width: 150px; /* Zmień w zależności od pożądanych rozmiarów */
+    margin: 10px; /* Margines dla obrazków */
+    max-width: 180px; /* Maksymalna szerokość logo partnerów */
 }
