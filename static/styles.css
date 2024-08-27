@@ -1,19 +1,48 @@
 body {
-    font-family: Arial, sans-serif;
+    background-color: white;
+    font-family: Tahoma;
     margin: 0;
     padding: 0;
+}
+
+h3 {
+    font-size: 26px;
+    font-weight: bold;
+    color:
+}
+
+h4 {
+    font-size: 18px;
+    font:
+    color:
+}
+.button {
+    background-color: blue;
+    border: none;
+    color: white;
+    padding: 15px 23px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    fontsize: 16px;
 }
 
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #f4f4f4;
+    background-color: white;
+    padding: 15px;
+}
+
+main {
+    display: flex;
+    margin: 20px;
     padding: 20px;
 }
 
 .logo img {
-    max-width: 200px; /* Zmień w zależności od rozmiaru logo */
+    max-width: 300px; /* Zmień w zależności od rozmiaru logo */
 }
 
 .navbar ul {
@@ -51,9 +80,10 @@ header {
 }
 
 footer {
-    background-color: #f4f4f4;
-    padding: 20px;
+    background-color: #white;
+    padding: 15px;
     text-align: center;
+
 }
 
 .partners {

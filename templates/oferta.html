@@ -1,10 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Oferta</title>
 </head>
+
 <body>
-$END$
+    <header>
+        <div class="logo">
+            <!-- Link do strony głównej -->
+            <a href="{{ url_for('home') }}">
+                <img src="{{ url_for('static', filename='incobet_logo.png') }}" alt="Incobet">
+            </a>
+        </div>
+        <nav class="navbar">
+            <ul>
+                <li><a href="#" class="o-firmie">O Firmie</a></li>
+                <li><a href="#" class="realizacje">Realizacje</a></li>
+                <li><a href="#" class="technologia">Technologia</a></li>
+                <li><a href="{{ url_for('oferta') }}" class="oferta">Oferta</a></li>
+                <li><a href="#" class="kontakt">Kontakt</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Oferta</h1>
+        <p>Tu tekst dotyczący oferty...</p>
+    </main>
+
+    <footer>
+        <div class="partners">
+            <img src="{{ url_for('static', filename='partner1.png') }}" alt="Partner 1">
+            <img src="{{ url_for('static', filename='partner2.png') }}" alt="Partner 2">
+            <img src="{{ url_for('static', filename='partner3.png') }}" alt="Partner 3">
+        </div>
+    </footer>
 </body>
 </html>
