@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+import math
 
 app = Flask(__name__)
 
@@ -14,9 +15,25 @@ beton_info = {
 def home():
     return render_template('index.html')  # Strona główna
 
+@app.route('/o_firmie', methods=['GET', 'POST'])
+def o_firmie():
+    return render_template('o_firmie.html') # strona o_firmie
+
+@app.route('/realizacje', methods=['GET', 'POST'])
+def realizacje():
+    return render_template('realizacje.html')
+
+@app.route('/technologia', methods=['GET', 'POST'])
+def technologia():
+    return render_template('technologia.html')
+
 @app.route('/oferta', methods=['GET', 'POST'])
 def oferta():
     return render_template('oferta.html')  # Strona oferty
+
+@app.route('/kontakt', methods=['GET', 'POST'])
+def kontakt():
+    return render_template('kontakt.html')
 
 @app.route('/test', methods=['GET', 'POST'])
 def test():

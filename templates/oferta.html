@@ -16,11 +16,11 @@
         </div>
         <nav class="navbar">
             <ul>
-                <li><a href="#" class="o-firmie">O Firmie</a></li>
-                <li><a href="#" class="realizacje">Realizacje</a></li>
-                <li><a href="#" class="technologia">Technologia</a></li>
+                <li><a href="{{ url_for('o_firmie') }}" class="o_firmie">O Firmie</a></li>
+                <li><a href="{{ url_for('realizacje') }}" class="realizacje">Realizacje</a></li>
+                <li><a href="{{ url_for('technologia') }}" class="technologia">Technologia</a></li>
                 <li><a href="{{ url_for('oferta') }}" class="oferta">Oferta</a></li>
-                <li><a href="#" class="kontakt">Kontakt</a></li>
+                <li><a href="{{ url_for('kontakt') }}" class="kontakt">Kontakt</a></li>
             </ul>
         </nav>
     </header>
