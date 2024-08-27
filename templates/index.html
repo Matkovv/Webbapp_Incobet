@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Strona Firmy</title>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="{{ url_for('static', filename='incobet_logo.png') }}" alt="Incobet">
+        </div>
+        <nav class="navbar">
+            <ul>
+                <li><a href="#o-firmie">O firmie</a></li>
+                <li><a href="#realizacje">Realizacje</a></li>
+                <li><a href="#technologia">Technologia</a></li>
+                <li><a href="#oferta">Oferta</a></li>
+                <li><a href="#kontakt">Kontakt</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div>
+            <p><center>
+                <h3>
+                    Betoniarnia na miarę XXI wieku - beton najwyższej jakości!
+                </h3>
+            <br>
+            <h4>
+                Witamy Państwa na stronie Incobet. Posiadamy nowoczesną, w pełni zautomatyzowaną i mobilną betoniarnię Cobra.
+            Dzięki nowoczesnej technologii, którą oferuję - produkujemy najlepszy beton na Mazowszu!
+            </h4>
+
+        </center></p>
+
+        </div>
+        <div class="messages">
+            {% if messages %}
+                <h3>Wiadomości:</h3>
+                <ul>
+                    {% for msg in messages %}
+                        <li>{{ msg['message'] }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    </main>
+
+    <footer>
+        <div class="partners">
+            <img src="{{ url_for('static', filename='partner1.png') }}" alt="Partner 1">
+            <img src="{{ url_for('static', filename='partner2.png') }}" alt="Partner 2">
+            <img src="{{ url_for('static', filename='partner3.png') }}" alt="Partner 3">
+        </div>
+    </footer>
+</body>
+</html>
