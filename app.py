@@ -15,6 +15,10 @@ beton_info = {
 def home():
     return render_template('index.html')  # Strona główna
 
+@app.route('/beton_app', methods=['GET', 'POST'])
+def beton_app():
+    return render_template('beton_app.html') # apka betonowa
+
 @app.route('/o_firmie', methods=['GET', 'POST'])
 def o_firmie():
     return render_template('o_firmie.html') # strona o_firmie

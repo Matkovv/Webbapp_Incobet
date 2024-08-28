@@ -54,10 +54,11 @@ h4 {
 #interactiveAppText {
     font-size: 18px;
     color: #666;
-    margin-right: 0px; /* Odstęp od ikonki */
+    margin-right: 20px; /* Odstęp od ikonki */
 }
 
 .icon-button {
+    display: inline-block;
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -72,6 +73,7 @@ h4 {
 .icon-button:hover {
     background-color: rgba(0, 0, 0, 0.1);
 }
+
 
 #mixerTruckButton {
     background-color: transparent;
