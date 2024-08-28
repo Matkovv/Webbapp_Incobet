@@ -28,6 +28,14 @@ h4 {
 
 }
 
+#map {
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto; /* Wycentruj mapę */
+    border: 1px solid #ccc;
+}
+
+
 .highlighted {
     font-weight: bold;
     color: red;
