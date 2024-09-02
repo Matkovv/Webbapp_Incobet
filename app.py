@@ -1,29 +1,99 @@
-from flask import Flask, render_template, request, jsonify
-import kalkulator  # Upewnij się, że kalkulator.py jest w tym samym folderze
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from werkzeug.security import generate_password_hash, check_password_hash
+from dashboard.routes import dashboard
+from kalkulator import load_locations, calculate_trucks_and_courses, calculate_distance  # Import funkcji z kalkulator.py
 
 app = Flask(__name__)
-locations = kalkulator.load_locations('locations.json')  # Wczytaj lokalizacje z pliku JSON
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mydatabase.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key = 'your_secret_key'
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+app.register_blueprint(dashboard, url_prefix='/dashboard')
 
+# Wczytaj lokalizacje z pliku
+locations = load_locations('locations.json')
 
-# Przykładowe dane betonu, symulujące bazę danych
-beton_info = {
-    "C6/8": "Beton C6/8 to beton o niskiej wytrzymałości, idealny do małych projektów.",
-    "C8/10": "Beton C8/10 to beton o średniej wytrzymałości, używany w budownictwie ogólnym.",
-    "C10/12": "Beton C10/12 to uniwersalny beton, doskonały zarówno do budowy fundamentów, jak i konstrukcji.",
-    "C12/16": "Beton C12/16 to beton o wysokiej wytrzymałości, idealny do konstrukcji nośnych."
-}
+class Beton(db.Model):
+    __tablename__ = 'beton'
+    id = db.Column(db.Integer, primary_key=True)
+    rodzaj = db.Column(db.String(100), nullable=False)
+    ilosc = db.Column(db.Integer, nullable=False)
+
+    def __repr__(self):
+        return f'<Beton {self.rodzaj}>'
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(100), unique=True, nullable=False)
+    password = db.Column(db.String(100), nullable=False)
+
+def init_db():
+    # Sprawdź, czy użytkownik 'admin' już istnieje
+    existing_user = User.query.filter_by(username='admin').first()
+    if not existing_user:
+        hashed_password = generate_password_hash('admin', method='pbkdf2:sha256')
+        admin_user = User(username='admin', password=hashed_password)
+        db.session.add(admin_user)
+        db.session.commit()
+    else:
+        print("Użytkownik 'admin' już istnieje, pominięto dodanie.")
+
+def create_tables():
+    db.create_all()
 
 @app.route('/')
 def home():
-    return render_template('index.html')  # Strona główna
+    return render_template('index.html')
+
+@app.route('/dashboard', methods=['GET', 'POST'])
+def dashboard():
+    if request.method == 'POST':
+        rodzaj = request.form['rodzaj']
+        ilosc = request.form['ilosc']
+        if rodzaj and ilosc:
+            nowy_beton = Beton(rodzaj=rodzaj, ilosc=int(ilosc))
+            db.session.add(nowy_beton)
+            db.session.commit()
+            return redirect(url_for('dashboard'))
+
+    betony = Beton.query.all()
+    return render_template('dashboard.html', betony=betony)
 
 @app.route('/beton_app', methods=['GET', 'POST'])
 def beton_app():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        user = User.query.filter_by(username=username).first()
+
+        if user and check_password_hash(user.password, password):
+            session['logged_in'] = True
+            return redirect(url_for('dashboard'))
+        else:
+            return 'Invalid username or password'
+
     return render_template('beton_app.html')
 
-# @app.route('/kalkulator', methods=['GET', 'POST'])
-# def kalkulator():
-    # return render_template('kalkulator.html')
+@app.route('/manage_betony', methods=['GET', 'POST'])
+def manage_betony():
+    if not session.get('logged_in'):
+        return redirect(url_for('beton_app'))
+
+    if request.method == 'POST':
+        rodzaj_betonu = request.form.get('rodzaj_betonu')
+        ilosc = float(request.form.get('ilosc'))
+        if Beton.query.filter_by(rodzaj=rodzaj_betonu).first():
+            return 'Beton o tej nazwie już istnieje', 400
+        new_beton = Beton(rodzaj=rodzaj_betonu, ilosc=ilosc)
+        db.session.add(new_beton)
+        db.session.commit()
+        return redirect(url_for('manage_betony'))
+
+    betony = Beton.query.all()
+    return render_template('manage_betony.html', betony=betony)
 
 @app.route('/kalkulator', methods=['GET', 'POST'])
 def kalkulator_route():
@@ -32,12 +102,15 @@ def kalkulator_route():
         cubic_meters = float(request.form.get('ilosc_betonu', 0))
         city = request.form.get('lokalizacja')
 
+        bet = Beton.query.filter_by(rodzaj=bet_type).first()
+        if not bet or cubic_meters > bet.ilosc:
+            return jsonify({'error': 'Niewystarczająca ilość betonu w magazynie.'}), 400
+
         if city in locations:
             location_coords = locations[city]
-            distance = kalkulator.calculate_distance(location_coords)
-            truck_assignment, remaining, total_courses = kalkulator.calculate_trucks_and_courses(cubic_meters)
+            distance = calculate_distance(location_coords)
+            truck_assignment, remaining, total_courses = calculate_trucks_and_courses(cubic_meters)
 
-            # Respond with JSON for AJAX requests
             return jsonify({
                 'bet_type': bet_type,
                 'cubic_meters': cubic_meters,
@@ -48,18 +121,13 @@ def kalkulator_route():
                 'total_courses': total_courses
             })
 
-        # Handle unknown location
         return jsonify({'error': 'Nieznana lokalizacja. Proszę podać miasto z listy.'}), 400
 
-    # Always handle GET requests
-    return render_template('kalkulator.html', locations=locations)  # Przekazanie lokalizacji do szablonu
-
-
-
+    return render_template('kalkulator.html', locations=locations)
 
 @app.route('/o_firmie', methods=['GET', 'POST'])
 def o_firmie():
-    return render_template('o_firmie.html') # strona o_firmie
+    return render_template('o_firmie.html')
 
 @app.route('/realizacje', methods=['GET', 'POST'])
 def realizacje():
@@ -71,43 +139,14 @@ def technologia():
 
 @app.route('/oferta', methods=['GET', 'POST'])
 def oferta():
-    return render_template('oferta.html')  # Strona oferty
+    return render_template('oferta.html')
 
 @app.route('/kontakt', methods=['GET', 'POST'])
 def kontakt():
     return render_template('kontakt.html')
 
-# @app.route('/test', methods=['GET', 'POST'])
-# def test():
-#     transport_info = None
-#     beton_description = None
-#
-#     # Obsługa formularza post
-#     if request.method == 'POST':
-#         rodzaj_betonu = request.form.get('rodzaj_betonu')
-#         if rodzaj_betonu in beton_info:
-#             beton_description = beton_info[rodzaj_betonu]  # Pobierz opis betonu
-#         ilosc_betonu = float(request.form.get('ilosc_betonu')) if request.form.get('ilosc_betonu') else 0
-#
-#         # Logika obliczeń transportu
-#         transport_needed = ''
-#         if ilosc_betonu <= 3.5 * 4:  # 4 gruszki 3,5m³
-#             trucks_needed = (ilosc_betonu / 3.5)
-#             transport_needed = f'Potrzebne gruszki: {trucks_needed:.0f} x 3,5m³ Gruszki'
-#         elif ilosc_betonu <= 9 * 2:  # 2 gruszki 9m³
-#             trucks_needed = (ilosc_betonu / 9)
-#             transport_needed = f'Potrzebne gruszki: {trucks_needed:.0f} x 9m³ Gruszki'
-#         else:  # Pompogruszka 12m³
-#             trucks_needed = (ilosc_betonu / 12)
-#             transport_needed = f'Potrzebna pompogruszka: 1 x 12m³, wymagane dodatkowe ładunki gruszki: {ilosc_betonu - 12:.2f} m³'
-#
-#         transport_info = {
-#             "rodzaj_betonu": rodzaj_betonu,
-#             "transport_needed": transport_needed,
-#             "czas_dostawy": "24 godziny"  # Przykładowy czas dostawy
-#         }
-#
-#     return render_template('test.html', transport_info=transport_info, beton_description=beton_description)
-
 if __name__ == '__main__':
+    with app.app_context():
+        create_tables()
+        init_db()
     app.run(debug=True)

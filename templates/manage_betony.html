@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <title>Beton App</title>
+    <title>Zarządzaj Betonami</title>
 </head>
-
 <body>
     <header>
         <div class="logo">
@@ -24,49 +23,41 @@
             </ul>
         </nav>
     </header>
-
     <main>
-        <div>
-            <h3>Beton App</h3>
-        </div>
+        <h3>Zarządzaj Betonami</h3>
 
-        <br>
-        <br>
+        <h4>Lista dostępnych betonów:</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Rodzaj Betonu</th>
+                    <th>Ilość (m³)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for beton in betony %}
+                <tr>
+                    <td>{{ beton.rodzaj }}</td>
+                    <td>{{ beton.ilosc }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
-        <div id="buttons">
-            <button class="btn-31">
-                <span class="text-container">
-                <span class="text">O betonach</span>
-                </span>
-            </button>
-        </div>
-
-        <br>
-        <br>
-
-        <div id="buttons">
-    <button class="btn-31" onclick="window.location.href='{{ url_for('kalkulator_route') }}'">
-    <span class="text-container">
-        <span class="text">Kalkulator</span>
-    </span>
-</button>
-
-</div>
-        <h3>Logowanie do zarządzania betonami</h3>
-        <form action="{{ url_for('beton_app') }}" method="post">
+        <h4>Dodaj nowy beton:</h4>
+        <form action="{{ url_for('manage_betony') }}" method="post">
             <div>
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
+                <label for="rodzaj_betonu">Rodzaj betonu:</label>
+                <input type="text" id="rodzaj_betonu" name="rodzaj_betonu" required pattern="[A-Za-z0-9\s]+" title="Rodzaj betonu powinien składać się tylko z liter i cyfr.">
+
             </div>
             <div>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
+                <label for="ilosc">Ilość (m³):</label>
+                <input type="number" id="ilosc" name="ilosc" step="0.1" min="0" required>
             </div>
-            <button type="submit">Zaloguj się</button>
+            <button type="submit">Dodaj Beton</button>
         </form>
-
     </main>
-
     <footer>
         <div class="partners">
             <img src="{{ url_for('static', filename='partner1.png') }}" alt="Partner 1">

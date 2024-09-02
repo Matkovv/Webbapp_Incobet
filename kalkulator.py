@@ -17,7 +17,6 @@ gruszki_available = {
     "gruszka_9": 2
 }
 
-# Wczytaj lokalizacje
 def load_locations(filename):
     try:
         with open(filename, 'r') as json_file:
@@ -26,8 +25,6 @@ def load_locations(filename):
     except FileNotFoundError:
         print("Nie znaleziono pliku locations.json")
         return {}
-
-locations = load_locations('locations.json')  # Wczytaj lokalizacje
 
 def calculate_trucks_and_courses(cubic_meters):
     total_capacity = sum(gruszki_available[type_] * gruszki_capacity[type_] for type_ in gruszki_available)
@@ -52,8 +49,6 @@ def calculate_trucks_and_courses(cubic_meters):
 
 def calculate_distance(location):
     return geodesic(location, warsaw_location).kilometers
-
-
 
 # Użytkownik wprowadza dane
 def main():
