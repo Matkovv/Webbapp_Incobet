@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Kalkulator</title>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='incobet_logo.png') }}" alt="Incobet Logo"></a>
+        </div>
+        <nav class="navbar">
+            <ul>
+                <li><a href="{{ url_for('o_firmie') }}" class="o_firmie">O Firmie</a></li>
+                <li><a href="{{ url_for('realizacje') }}" class="realizacje">Realizacje</a></li>
+                <li><a href="{{ url_for('technologia') }}" class="technologia">Technologia</a></li>
+                <li><a href="{{ url_for('oferta') }}" class="oferta">Oferta</a></li>
+                <li><a href="{{ url_for('kontakt') }}" class="kontakt">Kontakt</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div>
+            <h3>Kalkulator Betonu</h3>
+            <form id="kalkulatorForm">
+    <div>
+        <label for="rodzaj_betonu">Rodzaj betonu:</label>
+        <select name="rodzaj_betonu" id="rodzaj_betonu" required>
+            <option value="C6/8">C6/8</option>
+            <option value="C8/10">C8/10</option>
+            <option value="C10/12">C10/12</option>
+            <option value="C12/16">C12/16</option>
+        </select>
+    </div>
+
+    <div>
+        <label for="ilosc_betonu">Ilość betonu (m³):</label>
+        <input type="number" name="ilosc_betonu" id="ilosc_betonu" step="0.1" min="0" required>
+    </div>
+
+    <div>
+        <label for="lokalizacja">Lokalizacja (miasto):</label>
+        <select name="lokalizacja" id="lokalizacja" required>
+            <option value="" disabled selected>Wybierz miasto</option>
+            {% for city in locations.keys() %}
+                <option value="{{ city }}">{{ city }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <button type="submit">Oblicz</button>
+</form>
+
+        </div>
+
+        <div id="resultPopup" style="display: none;" class="popup">
+            <div id="resultContent">
+                <h3>Wyniki Kalkulacji</h3>
+                <p>Rodzaj betonu: <span id="betType"></span></p>
+                <p>Ilość betonu: <span id="cubicMeters"></span> m³</p>
+                <p>Lokalizacja: <span id="city"></span></p>
+                <p>Odległość od Warszawy: <span id="distance"></span> km</p>
+                <h4>Pojazdy potrzebne:</h4>
+                <ul id="truckList">
+                    <!-- Dynamicznie wstawiane elementy listy -->
+                </ul>
+                <p>Wymagana ilość betonu w kolejnych kursach: <span id="remaining"></span> m³</p>
+                <p>Całkowita liczba kursów: <span id="totalCourses"></span></p>
+            </div>
+            <button onclick="closePopup()">Zamknij</button>
+        </div>
+    </main>
+
+    <footer>
+        <div class="partners">
+            <img src="{{ url_for('static', filename='partner1.png') }}" alt="Partner 1">
+            <img src="{{ url_for('static', filename='partner2.png') }}" alt="Partner 2">
+            <img src="{{ url_for('static', filename='partner3.png') }}" alt="Partner 3">
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('kalkulatorForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission to server
+            const formData = new FormData(this);
+            fetch("{{ url_for('kalkulator_route') }}", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error); // Show an alert if there's an error
+                    return;
+                }
+
+                document.getElementById('resultContent').innerHTML = `
+                    <h3>Wyniki Kalkulacji</h3>
+                    <p>Rodzaj betonu: ${data.bet_type}</p>
+                    <p>Ilość betonu: ${data.cubic_meters} m³</p>
+                    <p>Lokalizacja: ${data.city}</p>
+                    <p>Odległość od Warszawy: ${data.distance.toFixed(2)} km</p>
+                    <h4>Pojazdy potrzebne:</h4>
+                    <ul>
+                        ${Object.entries(data.truck_assignment).map(([type, count]) => `<li>${count} x ${type.replace(/_/g, ' ')}</li>`).join('')}
+                    </ul>
+                    <p>Wymagana ilość betonu w kolejnych kursach: ${data.remaining.toFixed(2)} m³</p>
+                    <p>Całkowita liczba kursów: ${data.total_courses}</p>
+                `;
+
+                document.getElementById('resultPopup').style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+        function closePopup() {
+            document.getElementById('resultPopup').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
