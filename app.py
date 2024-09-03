@@ -50,6 +50,9 @@ def home():
 
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
+    if not session.get('logged_in'):
+        return redirect(url_for('beton_app'))
+
     if request.method == 'POST':
         rodzaj = request.form['rodzaj']
         ilosc = request.form['ilosc']
@@ -71,7 +74,7 @@ def beton_app():
 
         if user and check_password_hash(user.password, password):
             session['logged_in'] = True
-            return redirect(url_for('dashboard'))
+            return redirect(url_for('manage_betony'))  # Zmiana na przekierowanie do manage_betony
         else:
             return 'Invalid username or password'
 

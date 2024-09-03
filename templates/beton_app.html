@@ -52,18 +52,37 @@
 </button>
 
 </div>
-        <h3>Logowanie do zarządzania betonami</h3>
-        <form action="{{ url_for('beton_app') }}" method="post">
-            <div>
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            <div>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit">Zaloguj się</button>
-        </form>
+
+<div class="wrapper">
+        <div class="card-switch">
+            <label class="switch">
+               <input type="checkbox" class="toggle">
+               <span class="slider"></span>
+               <span class="card-side"></span>
+               <div class="flip-card__inner">
+                  <div class="flip-card__front">
+                     <div class="title">Log in</div>
+                     <form class="flip-card__form" action="{{ url_for('beton_app') }}" method="post">
+                            <input class="flip-card__input" name="username" placeholder="username" type="text" required>
+                            <input class="flip-card__input" name="password" placeholder="Password" type="password" required>
+                            <button class="flip-card__btn" type="submit">Let's go!</button>
+                     </form>
+
+                  </div>
+                  <div class="flip-card__back">
+                     <div class="title">Sign up</div>
+                     <form class="flip-card__form" action="{{ url_for('beton_app') }}" method="post">
+                        <input class="flip-card__input" name="username" placeholder="username" type="text" required>
+                        <input class="flip-card__input" name="password" placeholder="Password" type="password" required>
+                        <button class="flip-card__btn" type="submit">Let's go!</button>
+                     </form>
+
+
+                  </div>
+               </div>
+            </label>
+        </div>
+   </div>
 
     </main>
 
