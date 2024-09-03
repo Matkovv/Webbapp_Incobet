@@ -93,5 +93,27 @@
             <img src="{{ url_for('static', filename='partner3.png') }}" alt="Partner 3">
         </div>
     </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const toggleSwitch = document.querySelector('.toggle');
+
+        toggleSwitch.addEventListener('change', function () {
+            if (toggleSwitch.checked) {
+                // Przełącznik jest w pozycji 'włączone'
+                fetch('/run_program')
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Program uruchomiony:', data);
+                    })
+                    .catch(error => {
+                        console.error('Błąd:', error);
+                    });
+            }
+        });
+    });
+</script>
+
+
 </body>
 </html>

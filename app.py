@@ -3,7 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 from dashboard.routes import dashboard
-from kalkulator import load_locations, calculate_trucks_and_courses, calculate_distance  # Import funkcji z kalkulator.py
+from kalkulator import load_locations, calculate_trucks_and_courses, calculate_distance
+from switch_app import KeyboardListener
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mydatabase.db'
@@ -74,7 +75,7 @@ def beton_app():
 
         if user and check_password_hash(user.password, password):
             session['logged_in'] = True
-            return redirect(url_for('manage_betony'))  # Zmiana na przekierowanie do manage_betony
+            return redirect(url_for('manage_betony'))
         else:
             return 'Invalid username or password'
 
@@ -147,6 +148,12 @@ def oferta():
 @app.route('/kontakt', methods=['GET', 'POST'])
 def kontakt():
     return render_template('kontakt.html')
+
+@app.route('/run_program', methods=['GET'])
+def run_program():
+    listener = KeyboardListener(duration=60)  # Nasłuch przez 60 sekund
+    keys = listener.start()
+    return jsonify({'keys_pressed': keys})
 
 if __name__ == '__main__':
     with app.app_context():
